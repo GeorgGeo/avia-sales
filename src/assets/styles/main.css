@@ -1,0 +1,67 @@
+/* ==========================
+   CSS Variables
+========================== */
+
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #6c757d;
+
+  --text-color: #212529;
+  --background-color: #f8f9fa;
+
+  --border-radius: 8px;
+
+  --transition: 0.3s ease;
+}
+
+/* ==========================
+   Reset
+========================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================
+   Global
+========================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+
+  font-family: 'Inter', sans-serif;
+
+  background: var(--background-color);
+  color: var(--text-color);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+}
+
+ul,
+ol {
+  list-style: none;
+}
