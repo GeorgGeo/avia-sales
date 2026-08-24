@@ -3,11 +3,14 @@
 ========================== */
 
 :root {
-  --primary-color: #0d6efd;
-  --secondary-color: #6c757d;
+  --avia-primary: #6366f1;
+  --avia-primary-dark: #4f46e5;
 
-  --text-color: #212529;
-  --background-color: #f8f9fa;
+  --avia-gradient-start: #4f86f7;
+  --avia-gradient-end: #7c3aed;
+  --avia-bg: #ffffff;
+  --avia-text-muted: #6b7280;
+  --avia-border: #e5e7eb;
 
   --border-radius: 8px;
 
@@ -43,8 +46,8 @@ body {
 
   font-family: 'Inter', sans-serif;
 
-  background: var(--background-color);
-  color: var(--text-color);
+  /* background: var(--background-color);
+  color: var(--text-color); */
 }
 
 a {

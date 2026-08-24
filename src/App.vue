@@ -2,6 +2,9 @@
 import { onMounted } from 'vue';
 import { useStore } from 'vuex';
 
+
+import AviaHeader from './components/AviaHeader.vue';
+
 const store = useStore(); // Получаем доступ к хранилищу Vuex
 
 onMounted(() => {
@@ -28,6 +31,8 @@ onMounted(() => {
     <button type="button" class="btn btn-dark">Dark</button>
 
     <button type="button" class="btn btn-link">Link</button>
+    <!--  -->
+    <AviaHeader />
   </div>
 </template>
 
