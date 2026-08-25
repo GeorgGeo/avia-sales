@@ -4,6 +4,7 @@ import { useStore } from 'vuex';
 
 
 import AviaHeader from './components/AviaHeader.vue';
+import FlightSearch from './components/FlightSearch.vue';
 
 const store = useStore(); // Получаем доступ к хранилищу Vuex
 
@@ -33,6 +34,7 @@ onMounted(() => {
     <button type="button" class="btn btn-link">Link</button>
     <!--  -->
     <AviaHeader />
+    <FlightSearch />
   </div>
 </template>
 
