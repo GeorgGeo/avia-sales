@@ -68,3 +68,25 @@ ul,
 ol {
   list-style: none;
 }
+
+/* Глобальное переопределение z-index для Vue Datepicker */
+/* .dp--menu-wrapper,
+.dp--outer-menu-wrap {
+  z-index: 9999 !important;
+}
+
+/* ВАЖНО: Самому меню тоже нужен z-index */
+/* .dp--menu,
+.dp--menu-index {
+  z-index: 10000 !important;
+} */
+
+/* На всякий случай - все вложенные элементы */
+/* .dp--menu-wrapper .dp--menu {
+  z-index: 10000 !important;
+}
+.dp--menu-wrapper,
+.dp--outer-menu-wrap,
+.dp--menu {
+  z-index: 9999 !important;
+} */
