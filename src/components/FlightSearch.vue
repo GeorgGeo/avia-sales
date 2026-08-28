@@ -1,20 +1,57 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useStore } from 'vuex';
 // import M from '@/plugins/materialize'
 import * as Materialize from '@materializecss/materialize'
 import { VueDatePicker } from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
+const store = useStore();
+
 const bgImageLoaded = ref(false);
 const bgImageUrl = 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=2000&q=80';
 
-const departureInput = ref(null); // From where
-const destinationInput = ref(null); // Where to? 
+// Значения, которые вводит пользователь
+const departureInput = ref('');
+const destinationInput = ref('');
+
+// Ссылки на DOM-элементы для Materialize Autocomplete
+const departureInputEl = ref(null); // From where
+const destinationInputEl = ref(null); // Where to? 
 // const departInput = ref(null);
 // const returnInput = ref(null);
 
 const departDate = ref(null);
 const returnDate = ref(null);
+
+// Пребразовываем дату под формат YYYY-MM-DD
+const formatDate = (date) => {
+  if (!date) return null;
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+const searchFlight = () => {
+  const params = {
+    origin: departureInput.value,
+    destination: destinationInput.value,
+    departure_at: formatDate(departDate.value),
+    return_at: formatDate(returnDate.value),
+    one_way: false,
+    currency: 'usd',
+    sorting: 'price',
+    direct: false,
+    unique: false,
+    limit: 30,
+    page: 1,
+  };
+
+  store.dispatch('tickets/fetchTickets', params);
+}
 
 // Сделаем тестовые данные, чтобы убедиться, что сам компонент работает(Autocomplite)
 const airports = [
@@ -55,6 +92,7 @@ onMounted(() => {
   // Autocomplete
   // =========================
 
+  // Materialize теперь инициализируем так:
   // Инициализируем Autocomplete
   const autocompleteOptions = {
     minLength: 1,
@@ -62,12 +100,12 @@ onMounted(() => {
   };
 
   departureAutocomplete = Materialize.Autocomplete.init(
-    departureInput.value,
+    departureInputEl.value,
     autocompleteOptions
   );
 
   destinationAutocomplete = Materialize.Autocomplete.init(
-    destinationInput.value,
+    destinationInputEl.value,
     autocompleteOptions
   );
 
@@ -95,19 +133,19 @@ onBeforeUnmount(() => {
           just a trip
         </h1>
         <!-- ===== Search Bar ===== -->
-        <form class="search-bar d-flex" role="search">
+        <form class="search-bar d-flex" role="search" @submit.prevent="searchFlight">
           <div class="search-bar__field">
             <span class="material-symbols-outlined">
               flight_takeoff
             </span>
-            <input ref="departureInput" type="text" class="search-bar__input autocomplete" placeholder="From where?" aria-label="Departure city" autocomplete="off">
+            <input v-model="departureInput" ref="departureInputEl" type="text" class="search-bar__input autocomplete" placeholder="From where?" aria-label="Departure city" autocomplete="off">
           </div>
           <!--  -->
           <div class="search-bar__field">
             <span class="material-symbols-outlined">
               flight_land
             </span>
-            <input ref="destinationInput" type="text" class="search-bar__input autocomplete" placeholder="Where to?" aria-label="Destination city" autocomplete="off">
+            <input v-model="destinationInput" ref="destinationInputEl" type="text" class="search-bar__input autocomplete" placeholder="Where to?" aria-label="Destination city" autocomplete="off">
           </div>
           <!--  -->
           <div class="search-bar__field date-field">

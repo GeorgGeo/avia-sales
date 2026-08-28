@@ -1,17 +1,18 @@
 <script setup>
-import { onMounted } from 'vue';
-import { useStore } from 'vuex';
+// import { onMounted } from 'vue';
+// import { useStore } from 'vuex';
 
 
 import AviaHeader from './components/AviaHeader.vue';
 import FlightSearch from './components/FlightSearch.vue';
 
-const store = useStore(); // Получаем доступ к хранилищу Vuex
+// const store = useStore(); // Получаем доступ к хранилищу Vuex
 
-onMounted(() => {
-  // Диспатчим экшен для получения данных при монтировании компонента
-  store.dispatch('tickets/fetchTickets');
-});
+//! Это было нужно только для проверки API/backend.
+// onMounted(() => {
+//   // Диспатчим экшен для получения данных при монтировании компонента
+//   store.dispatch('tickets/fetchTickets');
+// });
 
 </script>
 

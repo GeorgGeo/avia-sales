@@ -17,21 +17,55 @@ const ticketsStore = {
   //  store.dispatch('tickets/fetchTickets') // 'имя_модуля/имя_экшена'
   //}
   //</script>
+  //! Метод store.commit используется для вызова мутаций (mutations), которые синхронно и напрямую изменяют состояние (state) в хранилище.
+  //! Главное архитектурное правило Vuex: состояние нельзя менять напрямую из компонентов; его можно изменять только внутри мутаций через commit. Это необходимо, чтобы Vuex мог точно отслеживать, когда, где и как изменились данные (например, для работы инструментов разработчика DevTools).
   state: {
     tickets: [],
+    currency: 'usd',
+    loading: false,
+    error: null,
   },
   getters: {},
-  mutations: {},
+  mutations: {
+    SET_TICKETS(state, tickets) {
+      state.tickets = tickets;
+    },
+    SET_CURRENCY(state, currency) {
+      state.currency = currency;
+    },
+    SET_LOADING(state, loading) {
+      state.loading = loading;
+    },
+    SET_ERROR(state, error) {
+      state.error = error;
+    }
+  },
+  //! Метод store.dispatch в Vuex (хранилище Vue) используется для вызова асинхронных действий (actions)
   actions: {
-     async fetchTickets(context) {
+     async fetchTickets(context, params) {
       try {
         console.log('Fetching tickets...', context);
+        console.log('Fetching tickets with params:', params);
         // const response = await apiClient.get('/aviasales/v3/prices_for_dates');
-        const response = await apiClient.get('/tickets'); // Используем прокси для запросов к API
+        context.commit('SET_LOADING', true);
+        context.commit('SET_ERROR', null);
+
+        const response = await apiClient.get('/tickets', { params }); // Используем прокси для запросов к API
         console.log('Tickets fetched:', response.data);
         // context.commit('SET_TICKETS', response.data);
+
+        context.commit('SET_TICKETS', response.data.data);
+        context.commit('SET_CURRENCY', response.data.currency);
+
+        console.log('First ticket:', response.data.data[0]);// реальная структуру одного билета
+
       } catch (error) {
         console.error('Error fetching tickets:', error);
+
+        context.commit('SET_ERROR', error);
+
+      } finally {
+        context.commit('SET_LOADING', false);
       }
     }
   },
