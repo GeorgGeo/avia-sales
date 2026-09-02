@@ -1,0 +1,384 @@
+Проверяем endpoint отдельно:
+
+npm run server
+
+и открой в браузере:
+
+http://localhost:3000/api/airports?term=lon
+
+Вот что приходит
+
+[
+  {
+    "id": "a6ec1def-4995-4a98-8c93-46b42b10fe7e",
+    "type": "city",
+    "code": "LON",
+    "name": "London",
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "state_code": null,
+    "coordinates": {
+      "lon": -0.1277583,
+      "lat": 51.5073509
+    },
+    "index_strings": [],
+    "weight": 136225,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": null
+  },
+  {
+    "id": "af3c3294-eb57-4493-846b-81ca44528dc2",
+    "type": "airport",
+    "code": "STN",
+    "name": "Stansted Airport",
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "city_code": "LON",
+    "city_name": "London",
+    "state_code": null,
+    "coordinates": {
+      "lon": 0.262703,
+      "lat": 51.889267
+    },
+    "index_strings": [],
+    "weight": 20654,
+    "cases": null,
+    "city_cases": null,
+    "country_cases": null
+  },
+  {
+    "id": "231e1e17-6648-48bb-b315-8a60855917fa",
+    "type": "airport",
+    "code": "LGW",
+    "name": "London Gatwick Airport",
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "city_code": "LON",
+    "city_name": "London",
+    "state_code": null,
+    "coordinates": {
+      "lon": -0.161863,
+      "lat": 51.156807
+    },
+    "index_strings": [],
+    "weight": 21607,
+    "cases": null,
+    "city_cases": null,
+    "country_cases": null
+  },
+  {
+    "id": "98d5fa02-8fc2-498c-b288-151f3a504697",
+    "type": "airport",
+    "code": "LHR",
+    "name": "London Heathrow Airport",
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "city_code": "LON",
+    "city_name": "London",
+    "state_code": null,
+    "coordinates": {
+      "lon": -0.453566,
+      "lat": 51.469604
+    },
+    "index_strings": [],
+    "weight": 39097,
+    "cases": null,
+    "city_cases": null,
+    "country_cases": null
+  },
+  {
+    "id": "fed738cc-8da0-4532-a07b-d105a970d001",
+    "type": "airport",
+    "code": "LTN",
+    "name": "London Luton Airport",
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "city_code": "LON",
+    "city_name": "London",
+    "state_code": null,
+    "coordinates": {
+      "lon": -0.376232,
+      "lat": 51.87977
+    },
+    "index_strings": [],
+    "weight": 19488,
+    "cases": null,
+    "city_cases": null,
+    "country_cases": null
+  },
+  {
+    "id": "b580148f-fa28-40eb-ab1c-318956abbb82",
+    "type": "airport",
+    "code": "LCY",
+    "name": "London City Airport",
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "city_code": "LON",
+    "city_name": "London",
+    "state_code": null,
+    "coordinates": {
+      "lon": 0.05,
+      "lat": 51.5
+    },
+    "index_strings": [],
+    "weight": 845,
+    "cases": null,
+    "city_cases": null,
+    "country_cases": null
+  },
+  {
+    "id": "0f4212b5-0744-45be-b2c1-cbda2e1c28fe",
+    "type": "airport",
+    "code": "SEN",
+    "name": "London Southend Airport",
+    "country_code": "GB",
+    "country_name": "United Kingdom",
+    "city_code": "LON",
+    "city_name": "London",
+    "state_code": null,
+    "coordinates": {
+      "lon": 0.701389,
+      "lat": 51.572777
+    },
+    "index_strings": [],
+    "weight": 413,
+    "cases": null,
+    "city_cases": null,
+    "country_cases": null
+  },
+  {
+    "id": "30924782-20e5-4e9e-a9d4-798d8ece6406",
+    "type": "city",
+    "code": "LYR",
+    "name": "Longyearbyen",
+    "country_code": "SJ",
+    "country_name": "Svalbard and Jan Mayen",
+    "state_code": null,
+    "coordinates": {
+      "lon": 15.8,
+      "lat": 78.208885
+    },
+    "index_strings": [],
+    "weight": 147,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Svalbard Airport"
+  },
+  {
+    "id": "f5f46321-5be0-46b0-841c-9508a15a6d79",
+    "type": "city",
+    "code": "LDB",
+    "name": "Londrina",
+    "country_code": "BR",
+    "country_name": "Brazil",
+    "state_code": "PR",
+    "coordinates": {
+      "lon": -51.1695824,
+      "lat": -23.3044524
+    },
+    "index_strings": [],
+    "weight": 65,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Londrina Airport"
+  },
+  {
+    "id": "8189807d-812f-4b9a-9b3f-2cd80fcb4702",
+    "type": "city",
+    "code": "ISP",
+    "name": "Islip",
+    "country_code": "US",
+    "country_name": "United States",
+    "state_code": "NY",
+    "coordinates": {
+      "lon": -73.09755,
+      "lat": 40.789314
+    },
+    "index_strings": [],
+    "weight": 130,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Long Island MacArthur Airport"
+  },
+  {
+    "id": "b8d86186-fbc0-46cb-8d28-4a9a4327b7b5",
+    "type": "city",
+    "code": "YXU",
+    "name": "London",
+    "country_code": "CA",
+    "country_name": "Canada",
+    "state_code": "ON",
+    "coordinates": {
+      "lon": -81.251,
+      "lat": 42.987
+    },
+    "index_strings": [],
+    "weight": 36,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "London International Airport"
+  },
+  {
+    "id": "f69ea7bb-a714-40f3-b202-b56a9d975f24",
+    "type": "city",
+    "code": "CGQ",
+    "name": "Changchun",
+    "country_code": "CN",
+    "country_name": "China",
+    "state_code": null,
+    "coordinates": {
+      "lon": 125.323544,
+      "lat": 43.817071
+    },
+    "index_strings": [],
+    "weight": 614,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Changchun Longjia International Airport"
+  },
+  {
+    "id": "b424c295-a2d2-4eff-8468-c1dde97a1b0e",
+    "type": "city",
+    "code": "GGG",
+    "name": "Longview",
+    "country_code": "US",
+    "country_name": "United States",
+    "state_code": "TX",
+    "coordinates": {
+      "lon": -94.8757709,
+      "lat": 32.3862619
+    },
+    "index_strings": [],
+    "weight": 15,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Gregg County Airport"
+  },
+  {
+    "id": "abd8aa82-c889-43ec-ab30-cd98d7bc5b10",
+    "type": "city",
+    "code": "LGB",
+    "name": "Long Beach",
+    "country_code": "US",
+    "country_name": "United States",
+    "state_code": "CA",
+    "coordinates": {
+      "lon": -118.1937395,
+      "lat": 33.7700504
+    },
+    "index_strings": [],
+    "weight": 71,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Long Beach Airport"
+  },
+  {
+    "id": "6ea16e57-9c42-445d-9adb-9cf57464504c",
+    "type": "city",
+    "code": "LBP",
+    "name": "Long Banga",
+    "country_code": "MY",
+    "country_name": "Malaysia",
+    "state_code": null,
+    "coordinates": {
+      "lon": 115.4,
+      "lat": 3.2
+    },
+    "index_strings": [],
+    "weight": 1,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Long Banga Airfield"
+  },
+  {
+    "id": "c4da8444-bb38-450e-9a81-6cd51a7bc0ce",
+    "type": "city",
+    "code": "ODN",
+    "name": "Long Seridan",
+    "country_code": "MY",
+    "country_name": "Malaysia",
+    "state_code": null,
+    "coordinates": {
+      "lon": 115.066666,
+      "lat": 4.033333
+    },
+    "index_strings": [],
+    "weight": 1,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Long Seridan Airport"
+  },
+  {
+    "id": "bab32fb6-7784-44d4-9675-b5b0e209c384",
+    "type": "city",
+    "code": "LGL",
+    "name": "Long Lellang",
+    "country_code": "MY",
+    "country_name": "Malaysia",
+    "state_code": null,
+    "coordinates": {
+      "lon": 114.25,
+      "lat": 4.183333
+    },
+    "index_strings": [],
+    "weight": 1,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Long Lellang"
+  },
+  {
+    "id": "94d2ded3-e435-4695-82f9-3895294c7962",
+    "type": "city",
+    "code": "LKH",
+    "name": "Long Akah",
+    "country_code": "MY",
+    "country_name": "Malaysia",
+    "state_code": null,
+    "coordinates": {
+      "lon": 114.78566,
+      "lat": 3.312934
+    },
+    "index_strings": [],
+    "weight": 1,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Long Akah"
+  },
+  {
+    "id": "2ca0c71d-742c-409e-baa1-1681887df3b6",
+    "type": "city",
+    "code": "WNZ",
+    "name": "Wenzhou",
+    "country_code": "CN",
+    "country_name": "China",
+    "state_code": null,
+    "coordinates": {
+      "lon": 120.699361,
+      "lat": 27.993828
+    },
+    "index_strings": [],
+    "weight": 1445,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Wenzhou Longwan International Airport"
+  },
+  {
+    "id": "2fbb252b-7603-445d-9af2-550188013615",
+    "type": "city",
+    "code": "LRE",
+    "name": "Longreach",
+    "country_code": "AU",
+    "country_name": "Australia",
+    "state_code": "QL",
+    "coordinates": {
+      "lon": 144.27147,
+      "lat": -23.439474
+    },
+    "index_strings": [],
+    "weight": 1,
+    "cases": null,
+    "country_cases": null,
+    "main_airport_name": "Longreach Airport"
+  }
+]

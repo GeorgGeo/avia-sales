@@ -9,6 +9,7 @@ const PORT = 3000;
 
 app.get('/api/tickets', async (req, res) => {
   try {
+    console.log('Tickets request from frontend:', req.query);
     // Пример запроса к Travelpayouts API для получения цен на авиабилеты
     // 'https://api.travelpayouts.com/aviasales/v3/prices_for_dates'
     const response = await axios.get(
@@ -53,6 +54,35 @@ app.get('/api/tickets', async (req, res) => {
   } catch (error) {
     console.error(
       'Travelpayouts error:',
+      error.response?.data || error.message,
+    );
+
+    res.status(error.response?.status || 500).json({
+      success: false,
+      error: error.response?.data || error.message,
+    });
+  }
+});
+
+// Следующий этап №1 — сделать autocomplete endpoint на Express
+// Добавляем второй endpoint:
+app.get('/api/airports', async (req, res) => {
+  try {
+    const response = await axios.get(
+      'https://autocomplete.travelpayouts.com/places2',
+      {
+        params: {
+          term: req.query.term,
+          locale: 'en',
+          'types[]': ['airport', 'city'],
+        },
+      },
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error(
+      'Autocomplete error:',
       error.response?.data || error.message,
     );
 

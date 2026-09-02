@@ -1,0 +1,36 @@
+Endpoint /api/airports уже работает и возвращает реальные данные Travelpayouts. Теперь задача становится очень конкретной:
+пользователь вводит "lon"
+        ↓
+FlightSearch.vue
+        ↓
+GET /api/airports?term=lon
+        ↓
+Express
+        ↓
+Travelpayouts /places2
+        ↓
+массив городов/аэропортов
+        ↓
+преобразуем в формат Materialize Autocomplete
+        ↓
+показываем подсказки
+        ↓
+пользователь выбирает London
+        ↓
+destinationInput = "London (LON)"
+destinationCode = "LON"
+
+
+Важный этап
+
+FlightSearch.vue
+      ↓
+axios
+      ↓
+/api/airports?term=lon
+      ↓
+Express
+      ↓
+Travelpayouts Autocomplete API
+      ↓
+20 результатов

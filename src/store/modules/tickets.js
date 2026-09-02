@@ -55,9 +55,15 @@ const ticketsStore = {
         // context.commit('SET_TICKETS', response.data);
 
         context.commit('SET_TICKETS', response.data.data);
+        // проверку пустого результата в Vuex
+        if (response.data.data.length === 0) {
+          console.warn('No tickets found for this route and dates');
+        }
         context.commit('SET_CURRENCY', response.data.currency);
 
-        console.log('First ticket:', response.data.data[0]);// реальная структуру одного билета
+        // console.log('First ticket:', response.data.data[0]);// реальная структуру одного билета
+        console.log('Tickets count:', response.data.data.length);
+        console.log('First ticket:', response.data.data[0] || 'No tickets found');
 
       } catch (error) {
         console.error('Error fetching tickets:', error);

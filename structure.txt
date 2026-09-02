@@ -1,0 +1,86 @@
+Какая архитектура должна получиться
+API-ключ остаётся только на сервере.
+Frontend вообще не должен знать.
+
+                FlightSearch.vue
+                       │
+                       │ пользователь вводит
+                       ▼
+              Madrid / Barcelona
+                       │
+                       │ выбирает вариант
+                       ▼
+                  MAD / BCN
+                       │
+                       │ Search
+                       ▼
+          store.dispatch('tickets/fetchTickets')
+                       │
+                       ▼
+                 Vuex tickets
+                       │
+                       ▼
+                axios /tickets
+                       │
+                       ▼
+                 Vite proxy
+                       │
+                       ▼
+               Express server
+                       │
+                       │ добавляет API key
+                       ▼
+             Travelpayouts API
+                       │
+                       ▼
+                 response.data
+                       │
+                       ▼
+                 Vuex state.tickets
+                       │
+                       ▼
+               TicketsList.vue
+                       │
+                       ▼
+                  карточки билетов
+
+У тебя уже есть Express.
+Поэтому лучше сохранить ту же архитектуру:
+
+FlightSearch.vue
+       │
+       ▼
+Vuex
+       │
+       ▼
+Express
+       │
+       ▼
+Travelpayouts Autocomplete API
+
+а не:
+
+Vue
+ │
+ └──────► Travelpayouts
+Потому что мы уже строим приложение через backend-прокси.
+
+Следующий этап №1 — сделать autocomplete endpoint на Express
+Добавляем второй endpoint:
+
+app.get('/api/airports', async (req, res) => {....})
+
+
+Можно сделать очень приличную карточку:
+┌──────────────────────────────────────────────────┐
+│ Ryanair                                    $120  │
+│                                                  │
+│ MAD                         BCN                  │
+│ 12:00 ──────────────────── 14:25                │
+│                                                  │
+│ 2h 25m                     1 transfer            │
+│                                                  │
+│ Return: 05:45 ──────────── ...                  │
+│                                                  │
+│                         [ Select flight ]        │
+└──────────────────────────────────────────────────┘

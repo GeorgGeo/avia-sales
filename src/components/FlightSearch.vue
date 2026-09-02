@@ -1,8 +1,9 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
+import apiClient from '@/plugins/axios';
 // import M from '@/plugins/materialize'
-import * as Materialize from '@materializecss/materialize'
+// import * as Materialize from '@materializecss/materialize'
 import { VueDatePicker } from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -12,8 +13,25 @@ const bgImageLoaded = ref(false);
 const bgImageUrl = 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=2000&q=80';
 
 // Значения, которые вводит пользователь
-const departureInput = ref('');
+// Значения input
+const departureInput = ref(''); // что показывает input: Madrid (MAD)
 const destinationInput = ref('');
+
+// Коды для API
+const departureCode = ref(''); // что реально отправляется API: MAD
+const destinationCode = ref('');
+
+// Результаты autocomplete
+const departureResults = ref([]); // Создаём результаты autocomplete
+const destinationResults = ref([]); // Создаём результаты autocomplete
+
+// Состояние загрузки
+const departureLoading = ref(false);// Добавляем состояние загрузки
+const destinationLoading = ref(false);// Добавляем состояние загрузки
+
+// Флаг выбора результата
+const isSelectingDeparture = ref(false); // Добавляем состояние выбора аэропорта, добавляем специальный флаг, для отслеживания изменения departureInput в watch. Это нужно, чтобы не сбрасывать departureCode при выборе аэропорта из списка.
+const isSelectingDestination = ref(false);
 
 // Ссылки на DOM-элементы для Materialize Autocomplete
 const departureInputEl = ref(null); // From where
@@ -35,10 +53,90 @@ const formatDate = (date) => {
   return `${year}-${month}-${day}`;
 }
 
+// Добавляем функцию запроса аэропортов
+const searchAirports = async (term) => {
+  const searchTerm = term.trim();
+
+  if (!searchTerm || searchTerm.length < 2) {
+    return [];
+  }
+
+  try {
+    const response = await apiClient.get('/airports', {
+      params: {
+        term: searchTerm,
+      },
+    });
+
+    console.log('Airports response:', response.data);
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching airports:', error);
+
+    return [];
+  }
+};
+// Делаем autocomplete для Departure
+watch(departureInput, async (value) => {
+  // Если значение изменилось в результате выбора аэропорта,
+  // новый запрос к API делать не нужно
+  if (isSelectingDeparture.value) {
+    isSelectingDeparture.value = false; // Сбрасываем флаг после выбора
+    return;
+  }
+
+  // Пользователь начал вводить новое значение —
+  // старый выбранный код больше недействителен
+  departureCode.value = '';
+
+  if (!value || value.length < 2) {
+    departureResults.value = [];
+    return;
+  };
+
+  departureLoading.value = true;
+  departureResults.value = await searchAirports(value);
+  departureLoading.value = false;
+});
+
+// Делаем autocomplete для Destination
+watch(destinationInput, async (value) => {
+
+  if (isSelectingDestination.value) {
+    isSelectingDestination.value = false;
+    return;
+  }
+
+  destinationCode.value = ''; // если пользователь начал вводить новое значение - старый выбранный код больше недействителен
+
+  if (!value || value.length < 2) {
+    destinationResults.value = [];
+    return;
+  };
+
+  destinationLoading.value = true;
+  destinationResults.value = await searchAirports(value);
+  destinationLoading.value = false;
+})
+
+// Функция поиска билетов
 const searchFlight = () => {
+  // Проверка, если пользовательничего не выбрал из autocomplete, то код будет пустой, и мы не будем отправлять запрос
+  if (!departureCode.value || !destinationCode.value) {
+    alert('Please select both departure and destination airports from the list.');
+    return;
+  };
+  // Проверка, если пользователь не выбрал даты, то мы не будем отправлять запрос
+  if (!departDate.value || !returnDate.value) {
+    alert('Please select both departure and return dates.');
+    return;
+  };
   const params = {
-    origin: departureInput.value,
-    destination: destinationInput.value,
+    // origin: departureInput.value,
+    // destination: destinationInput.value,
+    origin: departureCode.value,
+    destination: destinationCode.value,
     departure_at: formatDate(departDate.value),
     return_at: formatDate(returnDate.value),
     one_way: false,
@@ -52,24 +150,65 @@ const searchFlight = () => {
 
   store.dispatch('tickets/fetchTickets', params);
 }
+//! Самое важное — выбор результата
+const selectDeparture = (airport) => {
+  // Сообщаем watch(), что сейчас значение input
+  // изменяется программно в результате выбора
+  isSelectingDeparture.value = true;
 
+  // Показываем пользователю название + код
+  departureInput.value = `${airport.name} (${airport.code})`; // Показываем в input
+  
+
+  // Сохраняем код для API
+  departureCode.value = airport.code; // Сохраняем код для отправки на сервер
+  // Закрываем список
+  departureResults.value = []; // Очищаем результаты, чтобы скрыть список
+
+  console.log('Selected departure:', airport); // Для отладки, показываем выбранный аэропорт в консоли
+  console.log('Departure input:', departureInput.value); // Для отладки, показываем значение input
+  console.log('Departure code:', departureCode.value); // Для отладки, показываем код аэропорта
+}
+//! Самое важное — выбор результата
+const selectDestination = (airport) => {
+  // Сообщаем watch(), что input изменяется
+  // программно в результате выбора
+  isSelectingDestination.value = true;
+
+  // Показываем пользователю название + код
+  destinationInput.value = `${airport.name} (${airport.code})`;
+
+  // Сохраняем код для API
+  destinationCode.value = airport.code;
+
+  // Закрываем список
+  destinationResults.value = [];
+
+  console.log('Selected destination:', airport);
+  console.log('Destination input:', destinationInput.value);
+  console.log('Destination code:', destinationCode.value);
+}
 // Сделаем тестовые данные, чтобы убедиться, что сам компонент работает(Autocomplite)
-const airports = [
-  { id: 'MAD', text: 'Madrid (MAD)' },
-  { id: 'BCN', text: 'Barcelona (BCN)' },
-  { id: 'LHR', text: 'London (LHR)' },
-  { id: 'CDG', text: 'Paris (CDG)' },
-  { id: 'FCO', text: 'Rome (FCO)' },
-  { id: 'BER', text: 'Berlin (BER)' },
-];
+// const airports = [
+//   { id: 'MAD', text: 'Madrid (MAD)' },
+//   { id: 'BCN', text: 'Barcelona (BCN)' },
+//   { id: 'LHR', text: 'London (LHR)' },
+//   { id: 'CDG', text: 'Paris (CDG)' },
+//   { id: 'FCO', text: 'Rome (FCO)' },
+//   { id: 'BER', text: 'Berlin (BER)' },
+// ];
 
-let departureAutocomplete
-let destinationAutocomplete
+// let departureAutocomplete
+// let destinationAutocomplete
 
 // let departDatepicker
 // let returnDatepicker
 
-onMounted(() => {
+onMounted(async () => {
+  // Сначала просто проверяем API из Vue, Пока не подключаем Materialize.
+  // Это был тест, чтобы убедиться, что Vue умеет обращаться к твоему Express endpoint.
+  // const airports = await searchAirports('lon');
+  // console.log('Airports from Vue:', airports);
   // =========================
   // Background image
   // =========================
@@ -94,20 +233,20 @@ onMounted(() => {
 
   // Materialize теперь инициализируем так:
   // Инициализируем Autocomplete
-  const autocompleteOptions = {
-    minLength: 1,
-    data: airports,
-  };
+  // const autocompleteOptions = {
+  //   minLength: 1,
+  //   data: airports,
+  // };
 
-  departureAutocomplete = Materialize.Autocomplete.init(
-    departureInputEl.value,
-    autocompleteOptions
-  );
+  // departureAutocomplete = Materialize.Autocomplete.init(
+  //   departureInputEl.value,
+  //   // autocompleteOptions
+  // );
 
-  destinationAutocomplete = Materialize.Autocomplete.init(
-    destinationInputEl.value,
-    autocompleteOptions
-  );
+  // destinationAutocomplete = Materialize.Autocomplete.init(
+  //   destinationInputEl.value,
+  //   // autocompleteOptions
+  // );
 
   // =========================
   // Datepicker
@@ -115,11 +254,11 @@ onMounted(() => {
 
 });
 
-onBeforeUnmount(() => {
-  departureAutocomplete?.destroy()
-  destinationAutocomplete?.destroy()
+// onBeforeUnmount(() => {
+//   departureAutocomplete?.destroy()
+//   destinationAutocomplete?.destroy()
 
-})
+// })
 </script>
 
 <template>
@@ -139,6 +278,12 @@ onBeforeUnmount(() => {
               flight_takeoff
             </span>
             <input v-model="departureInput" ref="departureInputEl" type="text" class="search-bar__input autocomplete" placeholder="From where?" aria-label="Departure city" autocomplete="off">
+            <!-- Показываем результаты -->
+            <ul v-if="departureResults.length" class="autocomplete-list">
+              <li v-for="airport in departureResults" :key="airport.id" class="autocomplete-list__item" @click="selectDeparture(airport)">
+                {{ airport.name }} ({{ airport.code }})
+              </li>
+            </ul>
           </div>
           <!--  -->
           <div class="search-bar__field">
@@ -146,6 +291,12 @@ onBeforeUnmount(() => {
               flight_land
             </span>
             <input v-model="destinationInput" ref="destinationInputEl" type="text" class="search-bar__input autocomplete" placeholder="Where to?" aria-label="Destination city" autocomplete="off">
+            <!-- Показываем результаты -->
+            <ul v-if="destinationResults.length" class="autocomplete-list">
+              <li v-for="airport in destinationResults" :key="airport.id" class="autocomplete-list__item" @click="selectDestination(airport)">
+                {{ airport.name }} ({{ airport.code }})
+              </li>
+            </ul>
           </div>
           <!--  -->
           <div class="search-bar__field date-field">
@@ -263,9 +414,10 @@ onBeforeUnmount(() => {
   outline: 1px solid #CBD4E6;
   box-shadow: 0 0 8px 2px #CBD4E6;
 }
-
+/*  */
 .search-bar__field {
   display: flex;
+  position:relative; /** для позиционирования autocomplete-list */
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
@@ -273,7 +425,32 @@ onBeforeUnmount(() => {
   flex: 1;
   min-width: 0;
 }
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.autocomplete-list__item {
+  padding: 10px 15px;
+  cursor: pointer;
+}
+.autocomplete-list__item:hover {
+  background: #f5f5f5;
+}
+/*  */
 .search-bar__field:last-of-type {
   border-right: none;
 }
