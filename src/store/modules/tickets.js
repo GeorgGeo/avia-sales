@@ -25,7 +25,12 @@ const ticketsStore = {
     loading: false,
     error: null,
   },
-  getters: {},
+  getters: {
+    tickets: (state) => state.tickets,
+    currency: (state) => state.currency,
+    loading: (state) => state.loading,
+    error: (state) => state.error,
+  },
   mutations: {
     SET_TICKETS(state, tickets) {
       state.tickets = tickets;

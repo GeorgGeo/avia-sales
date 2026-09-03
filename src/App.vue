@@ -5,6 +5,7 @@
 
 import AviaHeader from './components/AviaHeader.vue';
 import FlightSearch from './components/FlightSearch.vue';
+import TicketList from './components/TicketList.vue';
 
 // const store = useStore(); // Получаем доступ к хранилищу Vuex
 
@@ -21,6 +22,8 @@ import FlightSearch from './components/FlightSearch.vue';
     <!--  -->
     <AviaHeader />
     <FlightSearch />
+
+    <TicketList />
   </div>
 </template>
 
