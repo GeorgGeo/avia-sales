@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 
 const props = defineProps({
   // Свойство для передачи данных о билете, берётся из родительского компонента TicketList.vue
@@ -6,6 +7,13 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+});
+
+// Полный URL билета
+const ticketUrl = computed(() => {
+  if (!props.ticket.link) return ''; // Если ссылки нет, возвращаем пустую ссылку
+
+  return new URL(props.ticket.link, 'https://www.aviasales.com').toString(); // Формируем полный URL билета, используя базовый URL
 });
 
 // Функция для форматирования времени
@@ -26,7 +34,7 @@ const addMinutes = (dateTime, minutes) => {
 
   const date = new Date(dateTime); // Создаем объект Date из переданной даты и времени
   date.setMinutes(date.getMinutes() + minutes); // Добавляем количество минут к текущему времени
-  return date.toISOString(); // Возвращаем новую дату в формате ISO 8601
+  return date; // Возвращаем новую дату
 };
 
 // Время прилёта прямого/первого направления
@@ -221,7 +229,14 @@ const formatTransfers = (transfers) => {
           {{ props.ticket.price }} {{ props.ticket.currency || 'USD' }}
         </strong>
 
-        <button type="button" class="btn btn-primary">Select</button>
+        <!-- <button type="button" class="btn btn-primary">Select</button> -->
+        <a v-if="ticketUrl" :href="ticketUrl" target="_blank" rel="noopener noreferrer" class="btn btn-primary ticket-card__button">
+          Select
+        </a>
+
+        <button v-else type="button" class="btn btn-secondary ticket-card__button" disabled>
+          Unavailable
+        </button>
       </div>
       <!-- /.ticket-card__price -->
     </article>
