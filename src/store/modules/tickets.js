@@ -26,7 +26,7 @@ const ticketsStore = {
     error: null,
   },
   getters: {
-    tickets: (state) => state.tickets,
+    tickets: (state) => state.tickets, // Возвращаем массив билетов
     currency: (state) => state.currency,
     loading: (state) => state.loading,
     error: (state) => state.error,

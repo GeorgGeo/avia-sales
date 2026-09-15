@@ -11,6 +11,11 @@
   --avia-bg: #ffffff;
   --avia-text-muted: #6b7280;
   --avia-border: #e5e7eb;
+  /*  */
+  --avia-border: #e9ecef;
+  --avia-text: #212529;
+  --avia-muted: #6c757d;
+  --avia-primary: #0d6efd;
 
   --border-radius: 8px;
 

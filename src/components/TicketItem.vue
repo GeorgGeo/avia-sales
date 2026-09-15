@@ -71,6 +71,22 @@ const formatTransfers = (transfers) => {
     return `${transfers} stops`; // Если несколько пересадок, возвращаем количество пересадок
   }
 };
+// Форматирование общего количества пересадок
+const formatTotalStops = (ticket) => {
+  const totalStops =
+    Number(ticket.transfers ?? 0) +
+    Number(ticket.return_transfers ?? 0);
+
+  if (totalStops === 0) {
+    return 'Direct';
+  }
+
+  if (totalStops === 1) {
+    return '1 stop';
+  }
+
+  return `${totalStops} stops`;
+};
 </script>
 
 <template>
@@ -140,7 +156,8 @@ const formatTransfers = (transfers) => {
 
         <div class="ticket-card__info-item">
           <span>Stops</span>
-          <strong>{{ formatTransfers(props.ticket.transfers) }}</strong>
+          <!-- <strong>{{ formatTransfers(props.ticket.transfers) }}</strong> -->
+          <strong>{{ formatTotalStops(props.ticket) }}</strong>
         </div>
 
       </div>
