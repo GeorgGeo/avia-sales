@@ -99,7 +99,7 @@ app.get('/api/nearby-dates', async (req, res) => {
         },
       }
     );
-    // nearbyDates данные из API получаем в виде массива объектов и сортируем по цене
+    // nearbyDates данные из API получаем в виде массива объектов и сортируем  их по цене
     const nearbyDates = Array.isArray(response.data?.data)
       ? response.data.data
           .filter(item => item.actual !== false)
