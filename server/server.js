@@ -64,6 +64,76 @@ app.get('/api/tickets', async (req, res) => {
   }
 });
 
+// Ниже существующего /api/tickets добавим новый маршрут
+app.get('/api/nearby-dates', async (req, res) => {
+  try {
+    const {
+      origin,
+      destination,
+      depart_date,
+      return_date,
+      currency = 'usd',
+    } = req.query;
+
+    if (!origin || !destination || !depart_date || !return_date) {
+      return res.status(400).json({
+        success: false,
+        error: 'origin, destination, depart_date and return_date are required',
+      });
+    }
+
+    const response = await axios.get(
+      `${process.env.TRAVELPAYOUTS_API_URL}/v2/prices/week-matrix`,
+      {
+        headers: {
+          'X-Access-Token': process.env.TRAVELPAYOUTS_API_KEY,
+        },
+
+        params: {
+          origin,
+          destination,
+          depart_date,
+          return_date,
+          currency,
+          show_to_affiliates: true,
+        },
+      }
+    );
+    // nearbyDates данные из API получаем в виде массива объектов и сортируем по цене
+    const nearbyDates = Array.isArray(response.data?.data)
+      ? response.data.data
+          .filter(item => item.actual !== false)
+          .map(item => ({
+            departDate: item.depart_date,
+            returnDate: item.return_date || null,
+            price: item.value,
+            stops: item.number_of_changes ?? 0,
+            currency: response.data.currency || currency,
+          }))
+          .sort((a, b) => Number(a.price) - Number(b.price))
+      : [];
+
+    // res.json(response.data);
+    // Возвращаем ответ в виде объекта с данными и сообщением об ошибке
+    return res.json({
+      success: response.data?.success ?? true,
+      data: nearbyDates,
+      error: response.data?.error ?? null,
+    });
+
+  } catch (error) {
+    console.error(
+      'Nearby dates error:',
+      error.response?.data || error.message
+    );
+
+    res.status(500).json({
+      success: false,
+      error: 'Failed to load nearby dates',
+    });
+  }
+});
+
 // Следующий этап №1 — сделать autocomplete endpoint на Express
 // Добавляем второй endpoint:
 app.get('/api/airports', async (req, res) => {

@@ -799,8 +799,8 @@ const closeFilters = () => {
   align-items: center;
 
   gap: 8px;
-
-  padding: 6px 10px;
+  height: 38px;
+  padding: 0 10px;
 
   background: #fff;
 
@@ -819,8 +819,10 @@ const closeFilters = () => {
 }
 
 .results-sort__select {
-  padding: 2px 22px 2px 0;
-
+  /* padding: 2px 22px 2px 0; */
+  height: 30px;
+  padding: 0 20px 0 0;
+  min-width: 105px;
   border: 0;
   outline: none;
 
@@ -843,10 +845,11 @@ const closeFilters = () => {
   display: none;
 
   align-items: center;
+  justify-content: center;
 
   gap: 7px;
-
-  padding: 9px 12px;
+  height: 38px;
+  padding: 0 12px;
 
   border: 1px solid var(--avia-border);
   border-radius: 10px;
@@ -857,6 +860,7 @@ const closeFilters = () => {
   font-weight: 600;
 
   color: var(--avia-text);
+  white-space: nowrap;
 }
 
 
@@ -989,24 +993,39 @@ const closeFilters = () => {
 
   .results-header {
     align-items: flex-start;
+    flex-wrap: wrap;
   }
 
   .results-actions {
+    display: flex;
+    gap: 8px;
     width: 100%;
   }
 
   .results-sort {
     flex: 1;
-
+    /* order: 1; Первый элемент в сетке будет последним */
+    min-width: 0;
+    height: 38px;
     justify-content: space-between;
   }
 
   .results-sort__select {
-    max-width: 130px;
+    /* max-width: 130px; */
+    min-width: 0;
+    width: 100%;
+    max-width: 125px;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .mobile-filter-button {
-    flex-shrink: 0;
+    /* flex-shrink: 0; */
+    /* flex: 0 0 auto; */
+    flex: 1;
+    height: 38px;
+    /* order: 2; Второй элемент в сетке будет первым */
   }
 
 }
