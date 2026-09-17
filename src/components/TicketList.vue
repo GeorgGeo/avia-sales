@@ -11,6 +11,10 @@ const loading = computed(() => store.getters['tickets/loading']); // Получ�
 const error = computed(() => store.getters['tickets/error']); // Получаем состояние про ошибку из хранилища внутри namespaced-модуля('tickets') Vuex
 // const tickets = computed(() => store.getters['tickets/tickets']);
 const tickets = computed(() => store.getters['tickets/tickets']); // Получаем массив билетов из хранилища внутри namespaced-модуля('tickets') Vuex
+const lastSearch = computed(() => store.getters['tickets/lastSearch']); // Получаем параметры последнего поиска из хранилища внутри namespaced-модуля('tickets') Vuex
+const nearbyDates = computed(() => store.getters['tickets/nearbyDates']); // Получаем варианты ближайших дат из хранилища внутри namespaced-модуля('tickets') Vuex
+const nearbyLoading = computed(() => store.getters['tickets/nearbyLoading']); // Получаем состояние загрузки из хранилища внутри namespaced-модуля('tickets') Vuex
+const nearbyError = computed(() => store.getters['tickets/nearbyError']); // Получаем состояние про ошибку из хранилища внутри namespaced-модуля('tickets') Vuex
 
 // 2. ЛОКАЛЬНОЕ СОСТОЯНИЕ (REF)
 
@@ -27,6 +31,8 @@ const selectedAirlines = ref([]); // Переменная для хранени�
 
 // Mobile filters
 const filtersOpen = ref(false); // Переменная для хранения состояния открытия фильтров на мобильных устройствах
+
+const nearbySearchKey = ref(''); // Переменная для хранения ключа поиска ближайших дат
 
 // 3. ВЫЧИСЛЯЕМЫЕ СВОЙСТВА (COMPUTED)
 
@@ -45,7 +51,40 @@ const availableMaxPrice = computed(() => {
   const prices = tickets.value.map(ticket => Number(ticket.price)).filter(price => Number.isFinite(price)); // Получаем массив цен билетов, фильтруем только конечные числа
   return prices.length ? Math.max(...prices) : 0; // Если есть цены, возвращаем максимальную цену, иначе 0
 });
+// Делаем watch защищёным от повторных запросов
+watch(
+  [tickets, loading, error, lastSearch],
+  ([newTickets, newLoading, newError, search]) => {
+    // Пока основной запрос выполняется — ничего не делаем
+    if (newLoading) return;
 
+    // Если основной запрос завершился ошибкой — ближайшие даты не ищем
+    if (newError) return;
+
+    // Если билеты найдены — ближайшие даты не нужны
+    if (newTickets.length > 0) return;
+
+    // Если параметров последнего поиска нет — ничего не делаем
+    if (!search) return;
+
+    // Создаём уникальный ключ текущего поиска
+    const key = [
+      search.origin,
+      search.destination,
+      search.departure_at,
+      search.return_at,
+    ].join('|');
+
+    // Не отправляем повторный запрос для того же поиска
+    if (key === nearbySearchKey.value) return;
+
+    nearbySearchKey.value = key;
+
+    console.log('No tickets found. Searching nearby dates...');
+
+    store.dispatch('tickets/fetchNearbyDates', search);
+  },
+);
 // Когда приходит новый набор билетов, устанавливаем новый диапазон цены.
 watch([availableMinPrice, availableMaxPrice], ([newMin, newMax]) => {
   minPrice.value = newMin; // Устанавливаем минимальную цену
